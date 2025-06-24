@@ -9,15 +9,33 @@ const initialItems = [
   { id: 3, description: "charger", quantity: 1, packed: true },
 ];
 const App = () => {
-  const [packedItems, setPackedItems] = useState([]);
+  const [packedItems, setPackedItems] = useState(initialItems);
   const handleAddNewItem = (item) => {
     setPackedItems((prev) => [...prev, item]);
+  };
+  const handleDeleteItem = (id) => {
+    const newItems = packedItems.filter((item) => item.id !== id);
+    setPackedItems(newItems);
+  };
+  const handleToggleItem = (id) => {
+    const newItems = packedItems.map((item) =>
+      item.id == id ? { ...item, packed: !item.packed } : item
+    );
+    setPackedItems(newItems);
+  };
+  const handleClearList = () => {
+    if (window.confirm("Are you sure?")) setPackedItems([]);
   };
   return (
     <div className="app">
       <Logo />
       <Form onAddItem={handleAddNewItem} />
-      <PackingList packedItems={packedItems} />
+      <PackingList
+        packedItems={packedItems}
+        onDeleteItem={handleDeleteItem}
+        onToggleItem={handleToggleItem}
+        onClearList={handleClearList}
+      />
       <Stats items={packedItems} />
     </div>
   );
